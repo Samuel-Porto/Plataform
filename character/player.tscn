@@ -1,26 +1,31 @@
-[gd_scene load_steps=22 format=3 uid="uid://blb6gtfk7lq1e"]
+[gd_scene load_steps=25 format=3 uid="uid://tk6kirnvjq8f"]
 
-[ext_resource type="Script" path="res://character/CharacterBody2D.gd" id="1_4u758"]
+[ext_resource type="Script" path="res://character/player.gd" id="1_3ch6o"]
+[ext_resource type="Shader" path="res://character/shockwave.gdshader" id="1_fmgh8"]
 [ext_resource type="Texture2D" uid="uid://ygllhbffhg6x" path="res://character/player.png" id="2_dslxp"]
-[ext_resource type="Script" path="res://character/Line2D.gd" id="3_y47r5"]
 [ext_resource type="Script" path="res://character/particles.gd" id="4_0tpo7"]
 [ext_resource type="Texture2D" uid="uid://md8mbyj53cev" path="res://character/particle.png" id="4_thcse"]
+[ext_resource type="Script" path="res://character/camera.gd" id="5_hrgdo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0x0u2"]
+shader = ExtResource("1_fmgh8")
+shader_parameter/global_position = Vector2(39, 136)
+shader_parameter/screen_size = Vector2(360, 180)
+shader_parameter/force = 10.0
+shader_parameter/size = 10.0
+shader_parameter/thickness = 10.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bvqhv"]
+atlas = ExtResource("2_dslxp")
+region = Rect2(0, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xi2r0"]
+atlas = ExtResource("2_dslxp")
+region = Rect2(0, 32, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ioe0a"]
 atlas = ExtResource("2_dslxp")
 region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_te1dv"]
-atlas = ExtResource("2_dslxp")
-region = Rect2(0, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xvacg"]
-atlas = ExtResource("2_dslxp")
-region = Rect2(0, 32, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6r0qi"]
-atlas = ExtResource("2_dslxp")
-region = Rect2(0, 48, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xk67m"]
 atlas = ExtResource("2_dslxp")
@@ -37,6 +42,10 @@ region = Rect2(32, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_hydio"]
 atlas = ExtResource("2_dslxp")
 region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_stop1"]
+atlas = ExtResource("2_dslxp")
+region = Rect2(0, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q0iup"]
 atlas = ExtResource("2_dslxp")
@@ -58,16 +67,23 @@ region = Rect2(16, 48, 16, 16)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_bvqhv")
+}],
+"loop": true,
+"name": &"crouch",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xi2r0")
+}],
+"loop": false,
+"name": &"dead",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_ioe0a")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_te1dv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xvacg")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6r0qi")
 }],
 "loop": true,
 "name": &"idle",
@@ -97,6 +113,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_stop1")
+}],
+"loop": true,
+"name": &"on_wall",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_q0iup")
 }, {
 "duration": 1.0,
@@ -116,41 +140,33 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hok3w"]
 size = Vector2(11, 15)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_fr3ky"]
-radius = 2.0
-
 [sub_resource type="Curve" id="Curve_d40gt"]
 max_value = 1.5
 _data = [Vector2(0, 1.5), 0.0, 0.0, 0, 0, Vector2(0.5, 0.75), 0.0, 0.0, 0, 0, Vector2(0.75, 0.75), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 4
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[sub_resource type="Animation" id="Animation_iokf1"]
+resource_name = "shockwave"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bxdr2"]
+_data = {
+"shockwave": SubResource("Animation_iokf1")
+}
+
+[node name="player" type="CharacterBody2D"]
+z_index = 1
 texture_filter = 1
-script = ExtResource("1_4u758")
+material = SubResource("ShaderMaterial_0x0u2")
+script = ExtResource("1_3ch6o")
 metadata/_edit_group_ = true
 
 [node name="sprites" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jp6tr")
-animation = &"idle"
+animation = &"crouch"
 
 [node name="collision" type="CollisionShape2D" parent="."]
 position = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_hok3w")
-
-[node name="camera" type="Camera2D" parent="."]
-position_smoothing_enabled = true
-
-[node name="aimPreview" type="Line2D" parent="."]
-width = 1.0
-default_color = Color(1, 1, 1, 0.498039)
-script = ExtResource("3_y47r5")
-
-[node name="object" type="CharacterBody2D" parent="aimPreview"]
-collision_layer = 2
-collision_mask = 2
-
-[node name="collision" type="CollisionShape2D" parent="aimPreview/object"]
-shape = SubResource("CircleShape2D_fr3ky")
 
 [node name="particles" type="Node2D" parent="."]
 script = ExtResource("4_0tpo7")
@@ -184,3 +200,17 @@ gravity = Vector2(0, 0)
 initial_velocity_min = 10.0
 initial_velocity_max = 20.0
 scale_amount_curve = SubResource("Curve_d40gt")
+
+[node name="camera" type="Camera2D" parent="."]
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 7.5
+script = ExtResource("5_hrgdo")
+
+[node name="wall_collision" type="RayCast2D" parent="."]
+target_position = Vector2(7, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_bxdr2")
+}

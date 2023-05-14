@@ -1,0 +1,92 @@
+[gd_scene load_steps=13 format=3 uid="uid://cqwucm3k4kbh"]
+
+[ext_resource type="Script" path="res://objects/spring/spring.gd" id="1_qucqf"]
+[ext_resource type="Texture2D" uid="uid://11whbnec8fx0" path="res://objects/spring/spring.png" id="2_hg6af"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ugc3"]
+atlas = ExtResource("2_hg6af")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1b23o"]
+atlas = ExtResource("2_hg6af")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tics0"]
+atlas = ExtResource("2_hg6af")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iiw2n"]
+atlas = ExtResource("2_hg6af")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3skwc"]
+atlas = ExtResource("2_hg6af")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_12d70"]
+atlas = ExtResource("2_hg6af")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l6q7r"]
+atlas = ExtResource("2_hg6af")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1hvja"]
+atlas = ExtResource("2_hg6af")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yrgv8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ugc3")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1b23o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tics0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iiw2n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3skwc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12d70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l6q7r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1hvja")
+}],
+"loop": false,
+"name": &"pulling",
+"speed": 16.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tv3kv"]
+size = Vector2(16, 3)
+
+[node name="spring" type="StaticBody2D"]
+script = ExtResource("1_qucqf")
+metadata/_edit_group_ = true
+
+[node name="sprites" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_yrgv8")
+animation = &"idle"
+
+[node name="area" type="Area2D" parent="."]
+
+[node name="collision" type="CollisionShape2D" parent="area"]
+position = Vector2(0, 6.5)
+shape = SubResource("RectangleShape2D_tv3kv")
+
+[connection signal="body_entered" from="area" to="." method="pull"]

@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://doiy8xajtn4bm"]
+
+[ext_resource type="Script" path="res://fall_dagame.gd" id="1_j3a4j"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ke3gi"]
+size = Vector2(16, 1)
+
+[node name="fall" type="Node2D"]
+position = Vector2(0, -3)
+script = ExtResource("1_j3a4j")
+
+[node name="particles" type="CPUParticles2D" parent="."]
+emission_shape = 3
+emission_rect_extents = Vector2(8, 1)
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 2.0
+initial_velocity_max = 5.0
+
+[node name="area" type="Area2D" parent="."]
+
+[node name="collision" type="CollisionShape2D" parent="area"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_ke3gi")
+
+[connection signal="body_entered" from="area" to="." method="_on_area_body_entered"]
